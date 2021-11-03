@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "17124179365",
+    "project_id": "coast-v1",
+    "storage_bucket": "coast-v1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17124179365:android:542932413e374e78067c4c",
+        "android_client_info": {
+          "package_name": "net.ifeps.coastv1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17124179365-e0vdhfmo9fv9h6s7hdo1n2iaani04f7l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTkl_S4ucQ8HyXu08vf5_m85l1C6om2ZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "17124179365-e0vdhfmo9fv9h6s7hdo1n2iaani04f7l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

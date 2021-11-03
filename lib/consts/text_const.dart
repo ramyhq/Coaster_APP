@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'colors.dart';
 
 
-
-TextStyle kLoginScreenTitle = const TextStyle(fontSize: 45,color: colorBlack ,fontWeight: FontWeight.w900);
+// Welcome to Coast Title
+TextStyle kLoginScreenTitle = const TextStyle(fontSize: 40,color: colorBlack ,fontWeight: FontWeight.w900);
 
 //Text Field
 // Email and Password "label" Text Style
