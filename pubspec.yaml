@@ -40,6 +40,7 @@ dependencies:
   firebase_auth: ^3.1.2
   firebase_core: ^1.7.0
   cloud_firestore: ^2.5.3
+  firebase_storage: ^10.2.16
 
   # stateManagement
   provider: ^6.0.1
@@ -55,6 +56,8 @@ dependencies:
   page_transition: ^2.0.4
   auto_size_text: ^2.1.0
   flutter_spinkit: ^5.1.0
+  getwidget: ^2.0.5
+
 
   #for rolling switch
   simple_animations: ^4.0.1
@@ -64,6 +67,10 @@ dependencies:
   #form_field_validator: ^1.1.0
   flutter_offline: ^2.0.0
   contactus: ^1.2.0
+  flutter_phone_direct_caller: ^2.1.1
+  uuid: ^3.0.6
+  image_picker: ^0.8.5+3
+
 
 dev_dependencies:
   flutter_test:

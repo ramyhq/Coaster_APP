@@ -2,15 +2,33 @@
 
 This is first version of Coast app
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+----------
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This was most of May 2022 updates by.Ramy Wahid
+
+### New Features
+
+# ads_list_screen
+- GridView/ListView toggle
+- enhances UI design
+- add like button to save favorite ads for later
+- add more button for later
+- add FAB to add new ad/post
+
+# ad_view_screen
+- add direct call
+- enhances UI design
+- add more button for later
+
+# liked_ads_list_screen (newScreen)
+- show only liked ads by logged in user
+
+# add_ad_screen
+- upload images to firebase Storage
+- enhance code in this page
+
+
+
