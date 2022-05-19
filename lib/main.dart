@@ -56,7 +56,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context)  {
     print('MyApp build is called ');
     print('isviewed is $isviewed **** ');
-
     return  FutureBuilder(
       future: init,
       builder: (context,snapshot){
