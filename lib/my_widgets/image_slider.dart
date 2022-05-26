@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 class SimpleImageSlider extends StatefulWidget {
   final List<String> images;
@@ -47,7 +50,7 @@ class _SliderWidgetState extends State<SimpleImageSlider> {
           children: [
             widget.images.length > 0
                 ? PageView(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               controller: _pageController,
               onPageChanged: (page) {
                 int newIndex;
@@ -69,9 +72,15 @@ class _SliderWidgetState extends State<SimpleImageSlider> {
                 margin: const EdgeInsets.all(10),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(5),
-                  child: Image.asset(
-                    item,
-                    fit: BoxFit.fill,
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: item,
+                      fit: BoxFit.fill,
+                    ),
+                    onTap: (){
+                         Navigator.push(context, MaterialPageRoute(builder: (c)=> ImageView(images: widget.images)));
+
+                    },
                   ),
                 ),
               ))
@@ -114,6 +123,40 @@ class _SliderWidgetState extends State<SimpleImageSlider> {
 
 
 
+class ImageView extends StatelessWidget {
+   ImageView({Key? key,required this.images}) : super(key: key);
+   List<String> images;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: PhotoViewGallery.builder(
+          itemCount: images.length,
+          scrollPhysics: const BouncingScrollPhysics(),
+          builder: (BuildContext context, int index) {
+            return PhotoViewGalleryPageOptions(
+              imageProvider: NetworkImage(images[index]),
+              initialScale: PhotoViewComputedScale.contained * 1,
+              heroAttributes: PhotoViewHeroAttributes(tag: images[index]),
+            );
+          },
+          loadingBuilder: (context, event) => Center(
+            child: Container(
+              width: 20.0,
+              height: 20.0,
+              child: CircularProgressIndicator(
+                value: event == null
+                    ? 0
+                    : event.cumulativeBytesLoaded / event.expectedTotalBytes!.toInt(),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 
 

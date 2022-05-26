@@ -20,6 +20,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,16 +30,22 @@ import 'data_layer/models/user_data.dart';
 
 int? isviewed;
 String? userUid;
+String? favoritLanguage;
+bool isGridSaved = false;
+SharedPreferences? prefs2;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: colorBlue,
-  )); // to make status bar transparent useing flutter services  package:flutter/services.dart';
+  )); // to make status bar transparent using flutter services  package:flutter/services.dart';
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs2 = await SharedPreferences.getInstance();
   isviewed = prefs.getInt('onBoard');
   userUid =  prefs.getString('userUid');
+  favoritLanguage =  prefs.getString('favoritLanguage');
+  isGridSaved =  prefs.getBool('isGrid') ?? false;
   print('userUid from Main() is :$userUid');
 
   final Future<FirebaseApp> init =  Firebase.initializeApp();
@@ -55,7 +62,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context)  {
     print('MyApp build is called ');
-    print('isviewed is $isviewed **** ');
+    print('isviewed is $favoritLanguage **** ');
 
     return  FutureBuilder(
       future: init,
@@ -74,8 +81,12 @@ class MyApp extends StatelessWidget {
 
             ],
             child: GetMaterialApp(
+              theme: ThemeData().copyWith(
+                textTheme: GoogleFonts.tajawalTextTheme(ThemeData().textTheme).copyWith(bodyText1: GoogleFonts.tajawal(fontSize: favoritLanguage == 'en' ? 18 : 16 ,fontWeight: FontWeight.w500,)),
+              ),
+
             debugShowCheckedModeBanner: false ,
-                title: 'Coast',
+                title: 'Coaster',
                 initialRoute: AuthWrapper.id,
                 routes: {
                   AuthWrapper.id:(context) => isviewed != 0 ? OnBoardScreen() : AuthWrapper(),
@@ -87,7 +98,7 @@ class MyApp extends StatelessWidget {
 
                 },
                 translations: Translation(),
-                locale: Locale('en'), // this for device language -> Get.deviceLocale
+                locale: Locale(favoritLanguage.toString()), // this for device language -> Get.deviceLocale
                 //fallbackLocale: Locale('en'),
 
             ),

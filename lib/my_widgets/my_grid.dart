@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coastv1/data_layer/database_services/ads_db_services.dart';
 import 'package:coastv1/data_layer/database_services/user_database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -56,99 +57,103 @@ class GridCard extends StatelessWidget {
     double _w = MediaQuery.of(context).size.width;
     final ourUser = Provider.of<User>(context);
     bool isLiked = AdsDatabaseServices().isLiked(ourUser.email.toString().trim(),likedBy);
-    return InkWell(
-      highlightColor: Colors.transparent,
-      splashColor: Colors.transparent,
-      onTap: onTab,
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              Container(
-                width: _w / 2.05,
-                height: _w / 2.5, //2.6
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(color: Colors.black.withOpacity(.05), blurRadius: 50),
-                  ],
-                  color: Color(0xff5C71F3),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(8),
-                  ),
-                ),
-                alignment: Alignment.center,
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage(image ?? 'assets/images/ob2.png'),
-                        fit: BoxFit.fill),
-                  ),
-                ),
-                // Image.asset(
-                //     image,
-                //     fit: BoxFit.cover,
-              ),
-              Container(
-                width: _w / 2.05,
-                height: _w / 7,
-                decoration: BoxDecoration(
-                  color: Colors.lightBlue.withOpacity(0.20),
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(8),
-                  ),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: _w / 25),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title.toString(),
-                      textScaleFactor: 1.4,
-                      maxLines: 1,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        color: Colors.black.withOpacity(.8),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      price!.round().toString(),
-                      textScaleFactor: 1,
-                      maxLines: 1,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.black.withOpacity(.7),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Positioned(
-            right: 0,
-              child: IconButton(
-                icon: isLiked ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
-                onPressed: (){
-                  isLiked ?
-                  AdsDatabaseServices().removeFromListInAds(
-                      ad_uid: adID.toString(),
-                      List_field: 'likedBy',
-                      element: ourUser.email)
-                      :
-                  AdsDatabaseServices().updateToListInAds(
-                      ad_uid: adID.toString(),
-                      List_field: 'likedBy',
-                      element: ourUser.email);
 
-                },),
-          ),
-        ],
+    return  Directionality(
+      textDirection: TextDirection.ltr,
+      child: InkWell(
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        onTap: onTab,
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Container(
+                  width: _w / 2.05,
+                  height: _w / 2.5, //2.6
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(color: Colors.black.withOpacity(.05), blurRadius: 50),
+                    ],
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(8),
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: CachedNetworkImageProvider(image.toString()),
+                          fit: BoxFit.cover),
+                    ),
+                  ),
+                  // Image.asset(
+                  //     image,
+                  //     fit: BoxFit.cover,
+                ),
+                Container(
+                  width: _w / 2.05,
+                  height: _w / 7,
+                  decoration: BoxDecoration(
+                    color: Colors.lightBlue.withOpacity(0.20),
+                    borderRadius: BorderRadius.vertical(
+                      bottom: Radius.circular(8),
+                    ),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: _w / 25),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title.toString(),
+                        textScaleFactor: 1.4,
+                        maxLines: 1,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                          color: Colors.black.withOpacity(.8),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        price!.round().toString(),
+                        textScaleFactor: 1,
+                        maxLines: 1,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.black.withOpacity(.7),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            ourUser.isAnonymous ? Container(): Positioned(
+              right: 0,
+                child: IconButton(
+                  icon: isLiked ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+                  onPressed: (){
+                    isLiked ?
+                    AdsDatabaseServices().removeFromListInAds(
+                        ad_uid: adID.toString(),
+                        List_field: 'likedBy',
+                        element: ourUser.email)
+                        :
+                    AdsDatabaseServices().updateToListInAds(
+                        ad_uid: adID.toString(),
+                        List_field: 'likedBy',
+                        element: ourUser.email);
+
+                  },),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -181,69 +186,61 @@ class ListCard extends StatelessWidget {
   }) : super(key: key);
 
 
-
   @override
   Widget build(BuildContext context) {
     final ourUser = Provider.of<User>(context);
     bool isLiked = AdsDatabaseServices().isLiked(ourUser.email.toString().trim(),likedBy);
-    return GestureDetector(
-      onTap: onTab,
-      child: GFCard(
-        boxFit: BoxFit.cover,
-        margin: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-        padding: EdgeInsets.symmetric(horizontal: 0),
-        image: Image.asset('assets/images/ob0.png'),
-        showImage: true,
-        elevation: 1,
-        titlePosition: GFPosition.start,
-        title: GFListTile(
-          icon: Material(
-            type: MaterialType.transparency,
-            child: InkWell(
-              child: Icon(
-                Icons.more_vert,
-              ),
-              onTap: () {
-                ///******
-              },
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: GestureDetector(
+        onTap: onTab,
+        child: GFCard(
+          //boxFit: BoxFit.cover,
+          margin: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+          padding: EdgeInsets.symmetric(horizontal: 0),
+          image: Image(image: CachedNetworkImageProvider(image.toString()), fit: BoxFit.cover),
+          showImage: true,
+          elevation: 1,
+          titlePosition: GFPosition.start,
+          title:  GFListTile(
+
+            margin: EdgeInsets.all(0),
+            titleText: title,
+            subTitleText: location,
+          ),
+          content: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(subtitle.toString()),
+                SizedBox(height: 15),
+                Text("Price : $price USD "),
+                ourUser.isAnonymous ? Container(): Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                         icon: isLiked ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+                      onPressed: (){
+                        isLiked ?
+                        AdsDatabaseServices().removeFromListInAds(
+                            ad_uid: adID.toString(),
+                            List_field: 'likedBy',
+                            element: ourUser.email)
+                        :
+                        AdsDatabaseServices().updateToListInAds(
+                        ad_uid: adID.toString(),
+                        List_field: 'likedBy',
+                        element: ourUser.email);
+
+                      },)
+                  ],
+                ),
+              ],
             ),
           ),
-          margin: EdgeInsets.all(0),
-          titleText: title,
-          subTitleText: location,
+          color: Colors.white,
         ),
-        content: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(subtitle.toString()),
-              SizedBox(height: 15),
-              Text("Price : $price USD "),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                       icon: isLiked ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
-                    onPressed: (){
-                      isLiked ?
-                      AdsDatabaseServices().removeFromListInAds(
-                          ad_uid: adID.toString(),
-                          List_field: 'likedBy',
-                          element: ourUser.email)
-                      :
-                      AdsDatabaseServices().updateToListInAds(
-                      ad_uid: adID.toString(),
-                      List_field: 'likedBy',
-                      element: ourUser.email);
-
-                    },)
-                ],
-              ),
-            ],
-          ),
-        ),
-        color: Colors.white,
       ),
     );
   }

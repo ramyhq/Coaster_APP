@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 
-
+const String defaultProfileImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsuKHtQ3e0QWhO0esSv8cafAxx9iYVpRsP8g&usqp=CAU';
 
 const Color colorBlack =  Color(0xff333333);
-const Color colorGrey =  Color(0xff999999);
+const Color colorGrey =  Color(0xff747474);
 const Color colorWhite =  Color(0xffffffff);
-const Color colorLightBlue =  Color(0xff66ccff);
+const Color colorLightBlue =  Color(0xff35a8ec);
 const Color colorMixBlue =  Color(0xff66ccff);
 const Color colorBlue =  Color(0xff006699);
 

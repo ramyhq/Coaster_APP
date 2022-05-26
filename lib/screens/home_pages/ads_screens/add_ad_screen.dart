@@ -90,6 +90,7 @@ class _AddAdScreenState extends State<AddAdScreen> {
       _apartmentType = null;
       _pickedImageList = [];
       _imagesUrl = [];
+      _location = null;
     });
   }
 
@@ -150,7 +151,7 @@ class _AddAdScreenState extends State<AddAdScreen> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                          title: const Text('Choose Image',
+                                          title:  Text('Choose Image'.tr,
                                               style: kDialogAlert),
                                           content: SingleChildScrollView(
                                             child: ListBody(
@@ -160,8 +161,8 @@ class _AddAdScreenState extends State<AddAdScreen> {
                                                   child: InkWell(
                                                       splashColor:
                                                           Colors.transparent,
-                                                      child: const Text(
-                                                          'Camera',
+                                                      child:  Text(
+                                                          'Camera'.tr,
                                                           style:
                                                               kDialogAlertElements),
                                                       onTap: () async {
@@ -183,7 +184,7 @@ class _AddAdScreenState extends State<AddAdScreen> {
                                                   child: InkWell(
                                                     splashColor:
                                                         Colors.transparent,
-                                                    child: const Text('Gallery',
+                                                    child:  Text('Gallery'.tr,
                                                         style:
                                                             kDialogAlertElements),
                                                     onTap: () async {
@@ -218,7 +219,7 @@ class _AddAdScreenState extends State<AddAdScreen> {
                     validator: (val) {
                       if (_letsValidat) {
                         if (val!.isEmpty || val.length < 11) {
-                          return 'Enter a title';
+                          return 'Enter a title'.tr;
                         } else {
                           return null;
                         }
@@ -226,7 +227,7 @@ class _AddAdScreenState extends State<AddAdScreen> {
                       return null;
                     },
                     controller: _titleController,
-                    hintText: 'Title',
+                    hintText: 'Title'.tr,
                     labelText: 'Title',
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
@@ -244,7 +245,7 @@ class _AddAdScreenState extends State<AddAdScreen> {
                       return null;
                     },
                     controller: _descriptionController,
-                    hintText: 'description',
+                    hintText: 'description'.tr,
                     labelText: 'description',
                     keyboardType: TextInputType.multiline,
                     textInputAction: TextInputAction.newline,
@@ -263,7 +264,7 @@ class _AddAdScreenState extends State<AddAdScreen> {
                         }
                       }
                     },
-                    hintText: 'Mobile',
+                    hintText: 'Mobile'.tr,
                     labelText: 'Mobile',
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.next,
@@ -281,7 +282,7 @@ class _AddAdScreenState extends State<AddAdScreen> {
                         }
                       }
                     },
-                    hintText: 'Price',
+                    hintText: 'Price'.tr,
                     labelText: 'Price',
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.next,
@@ -294,14 +295,14 @@ class _AddAdScreenState extends State<AddAdScreen> {
                     validator: (val) {
                       if (_letsValidat) {
                         if (val!.isEmpty || val.length < 11) {
-                          return "What is the area of the place? ".tr;
+                          return "What is the area of the place?".tr;
                         } else {
                           return null;
                         }
                       }
                     },
                     controller: _areaController,
-                    hintText: 'Area of the place',
+                    hintText: 'Area of the place'.tr,
                     labelText: 'Area of the place',
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.next,
@@ -318,7 +319,7 @@ class _AddAdScreenState extends State<AddAdScreen> {
                       }
                     },
                     controller: _addressController,
-                    hintText: 'Address',
+                    hintText: 'Address'.tr,
                     labelText: 'Address',
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
@@ -333,14 +334,14 @@ class _AddAdScreenState extends State<AddAdScreen> {
                         //Location or Place
                         DropdownButton<String>(
                           isExpanded: true,
-                          hint: const Text("Location"),
+                          hint:  Text("Location".tr),
                           value: _location,
                           onChanged: (val) {
                             setState(() {
                               _location = val;
                             });
                           },
-                          items: List.generate(5, (index) {
+                          items: List.generate(places.length, (index) {
                             return DropdownMenuItem(
                                 value: places[index].location,
                                 child: Text(places[index].location.toString()));
@@ -349,47 +350,47 @@ class _AddAdScreenState extends State<AddAdScreen> {
                         // place type
                         DropdownButton<String>(
                           isExpanded: true,
-                          hint: const Text("place type"),
+                          hint:  Text("Rent or Sell".tr),
                           value: _adType,
                           onChanged: (val) {
                             setState(() {
                               _adType = val;
                             });
                           },
-                          items: const [
+                          items:  [
                             DropdownMenuItem(
-                                value: 'rent', child: Text('rent')),
+                                value: 'rent', child: Text('rent'.tr)),
                             DropdownMenuItem(
-                                value: 'sell', child: Text('sell')),
+                                value: 'sell', child: Text('sell'.tr)),
                           ],
                         ),
                         // Apartment type
                         DropdownButton<String>(
                           isExpanded: true,
-                          hint: const Text("Apartment type"),
+                          hint:  Text("Apartment type".tr),
                           value: _apartmentType,
                           onChanged: (val) {
                             setState(() {
                               _apartmentType = val;
                             });
                           },
-                          items: const [
+                          items:  [
                             DropdownMenuItem(
-                                value: 'apartment', child: Text('apartment')),
+                                value: 'apartment', child: Text('apartment'.tr)),
                             DropdownMenuItem(
-                                value: 'villa', child: Text('villa')),
+                                value: 'villa', child: Text('villa'.tr)),
                             DropdownMenuItem(
-                                value: 'chalet', child: Text('chalet')),
+                                value: 'chalet', child: Text('chalet'.tr)),
                             DropdownMenuItem(
-                                value: 'land', child: Text('land')),
+                                value: 'land', child: Text('land'.tr)),
                             DropdownMenuItem(
-                                value: 'shop', child: Text('shop')),
+                                value: 'shop', child: Text('shop'.tr)),
                           ],
                         ),
                         // Level
                         DropdownButton<double>(
                           isExpanded: true,
-                          hint: const Text("Level"),
+                          hint:  Text("Level".tr),
                           value: _level,
                           onChanged: (val) {
                             setState(() {
@@ -405,7 +406,7 @@ class _AddAdScreenState extends State<AddAdScreen> {
                         // Rooms
                         DropdownButton<double>(
                           isExpanded: true,
-                          hint: const Text("Rooms"),
+                          hint:  Text("Rooms".tr),
                           value: _rooms,
                           onChanged: (val) {
                             setState(() {
@@ -421,7 +422,7 @@ class _AddAdScreenState extends State<AddAdScreen> {
                         // Wcs
                         DropdownButton<double>(
                           isExpanded: true,
-                          hint: const Text("Wcs"),
+                          hint:  Text("Wcs".tr),
                           value: _wcs,
                           onChanged: (val) {
                             setState(() {
@@ -460,9 +461,9 @@ class _AddAdScreenState extends State<AddAdScreen> {
                                 userDataFromDB != null) {
                               if (_pickedImageList.isEmpty) {
                                 ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text('Select image'),
-                                  duration: Duration(seconds: 1),
+                                    .showSnackBar( SnackBar(
+                                  content: Text('Select image'.tr),
+                                  duration: const Duration(seconds: 1),
                                 ));
                                 return;
                               }

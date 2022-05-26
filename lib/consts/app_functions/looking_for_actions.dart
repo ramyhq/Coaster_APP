@@ -1,42 +1,65 @@
+import 'package:get/get.dart';
 
+final List<Map<String, String>> actionsMap = [
+  // For Sale
+  {
+    'title': 'Apartments'.tr,
+    'apartmentType': 'apartment',
+    'adType': 'sell',
+  },
 
+  {
+    'title': 'Villa'.tr,
+    'apartmentType': 'villa',
+    'adType': 'sell',
+  },
 
-final List<Map<String,String>> actionsMap = [
-{
-'title': 'apartment for sell',
-'apartmentType' : 'apartment' ,
-'adType' : 'sell',
-},
+  {
+    'title': 'Chalet'.tr,
+    'apartmentType': 'chalet',
+    'adType': 'sell',
+  },
 
-{
-'title': 'villa for sell',
-'apartmentType' : 'villa' ,
-'adType' : 'sell',
-},
+  {
+    'title': 'Lands'.tr,
+    'apartmentType': 'land',
+    'adType': 'sell',
+  },
+  {
+    'title': 'Shop'.tr,
+    'apartmentType': 'shop',
+    'adType': 'sell',
+  },
 
-{
-'title': 'land for sell',
-'apartmentType' : 'land' ,
-'adType' : 'sell',
-},
+  // For Rent
 
-{
-'title':  'apartment for rent',
-'apartmentType' : 'apartment' ,
-'adType' : 'rent',
-},
+  {
+    'title': 'Apartments'.tr,
+    'apartmentType': 'apartment',
+    'adType': 'rent',
+  },
 
-{
-'title':  'villa for rent',
-'apartmentType' : 'villa' ,
-'adType' : 'rent',
-},
+  {
+    'title': 'Villa'.tr,
+    'apartmentType': 'villa',
+    'adType': 'rent',
+  },
 
-{
-'title': 'land for rent',
-'apartmentType' : 'land' ,
-'adType' : 'rent',
-},
+  {
+    'title': 'Chalet'.tr,
+    'apartmentType': 'chalet',
+    'adType': 'rent',
+  },
 
+  {
+    'title': 'Lands'.tr,
+    'apartmentType': 'land',
+    'adType': 'rent',
+  },
+  {
+    'title': 'Shop'.tr,
+    'apartmentType': 'shop',
+    'adType': 'rent',
+  },
 
 ];

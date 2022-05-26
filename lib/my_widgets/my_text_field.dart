@@ -19,10 +19,12 @@ class MyTextField extends StatelessWidget {
     this.keyboardType,
     this.textInputAction,
      this.obscureText = false,
+     this.autofocus = false,
      this.inputFormatters,
      this.maxLines,
      this.minLines,
      this.onFieldSubmitted,
+     this.margin,
   }) : super(key: key);
 
   final Widget? prefixIcon;
@@ -40,14 +42,17 @@ class MyTextField extends StatelessWidget {
   final int? minLines;
   final int? maxLines;
   void Function(String)? onFieldSubmitted;
+  EdgeInsetsGeometry? margin;
 
   bool obscureText ;
+  bool autofocus ;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8,vertical: 5),
+      margin: margin ?? const EdgeInsets.symmetric(horizontal: 8,vertical: 5),
       child: TextFormField(
+        autofocus: false,
         controller: controller,
         validator: validator,
         decoration: InputDecoration(

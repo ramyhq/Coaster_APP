@@ -2,13 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:contactus/contactus.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 class AboutApp extends StatelessWidget {
-  const AboutApp({Key? key}) : super(key: key);
-
-  static const String aboutText =
-      ' الهدف من التطبيق هو طرد الفئران والحشرات الغير مرغوب بها في بعض الاماكن التي تصعب طردها منها مثل لو كنت في الجيش او في سكن الشغل';
+   AboutApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,43 +18,34 @@ class AboutApp extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: 20,
+                height: 40,
               ),
-              Text(
-                'طارد الفئران',
-                textAlign: TextAlign.center,
+              Text('Coaster'.tr,style: TextStyle(fontSize: 30,fontWeight: FontWeight.w700),
               ),
-              SizedBox(
-                height: 20,
-              ),
-              Card(
-                color: Colors.white.withOpacity(0.8),
-                elevation: 10,
-                margin: EdgeInsets.symmetric(
-                  horizontal: 30.0,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text(aboutText,
-                    textAlign: TextAlign.center,),
-                ),
-              ),
+
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40),
+                padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 20),
+                child: Text('Coaster is the easiest solution to search for real estate in the coastal cities easily... Find your vacation, your apartment, or even a commercial store'.tr,style: GoogleFonts.tajawal(fontSize: 16,fontWeight: FontWeight.w700)
+                ),
+              ),
+              Divider(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: ContactUs(
                   cardColor: Colors.white,
-                  textColor: Colors.teal.shade900,
+                  textColor: Colors.grey,
                   email: 'ramy.dmk@gmail.com',
-                  dividerThickness: 2,
-                  dividerColor: Colors.black87,
+                  dividerThickness: 1,
+                  dividerColor: Colors.grey,
                   website: 'https://ifeps.net',
                   githubUserName: 'ramyhq',
                   linkedinURL: 'https://www.linkedin.com/in/ramyhq/',
-                  taglineColor: Colors.black87,
+                  taglineColor: Colors.grey,
                   instagram: 'ramy.dmk',
-                  companyColor: Colors.black87,
+                  companyColor: Colors.black54,
                   companyName: 'Ramy Wahid',
-                  companyFontSize: 35,
+                  companyFontSize: 25,
+                  taglineFontWeight: FontWeight.w300,
                   tagLine: 'Flutter Developer',
                 ),
               ),

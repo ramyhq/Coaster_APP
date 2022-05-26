@@ -1,38 +1,28 @@
 import 'package:coastv1/consts/colors.dart';
-import 'package:coastv1/data_layer/database_services/ads_db_services.dart';
-import 'package:coastv1/data_layer/database_services/user_database_services.dart';
-import 'package:coastv1/data_layer/models/ad_model.dart';
-import 'package:coastv1/data_layer/models/user_data.dart';
 import 'package:coastv1/main.dart';
 import 'package:coastv1/my_widgets/loading_widget.dart';
 import 'package:coastv1/my_widgets/my_grid.dart';
-import 'package:coastv1/providers/authentication_services.dart';
-import 'package:coastv1/screens/home_drawer/home_drawer.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:coastv1/screens/home_pages/ads_screens/ad_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'ad_view_screen.dart';
+import '../../../data_layer/database_services/ads_db_services.dart';
+import '../../../data_layer/models/ad_model.dart';
+import '../../../providers/authentication_services.dart';
 import 'add_ad_screen.dart';
 
-class AdsScreen extends StatelessWidget {
-  final String? adType; // sell or rent
-  final String? apartmentType; // apartment, villa, land, shop, or chalet
-  final String? location;
-  const AdsScreen({Key? key, this.adType, this.apartmentType, this.location})
+class SearchResultScreen extends StatelessWidget {
+   SearchResultScreen({Key? key, required this.searchKey,})
       : super(key: key);
-
+final String searchKey;
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-    return StreamBuilder<List<AdModel?>?>(
-        stream: AdsDatabaseServices().adsListStreamByPlace(
-            adType:adType,
-            apartmentType:apartmentType,
-            location:location
-        ),
+    final isGuest = Provider.of<AuthServices>(context).isGuest;
+
+    return FutureBuilder<List<AdModel?>?>(
+      future: AdsDatabaseServices().AdsDataListBySearchKey(searchKey),
         builder: (context, snapshot) {
           // that snapshot refere to the snapshot came from firebase
           // make sure to check if there is data on it before using it
@@ -40,22 +30,12 @@ class AdsScreen extends StatelessWidget {
             List<AdModel?>? adsList = snapshot.data;
             return adsList != null
                 ? Scaffold(
-                    floatingActionButton:  !user.isAnonymous ? FloatingActionButton.small(
-                      backgroundColor: colorBlue,
-                      child: const Icon(Icons.add),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                                pageBuilder: (context, animation1, animation2) => AddAdScreen()));
-                      },
-                    ): null,
-                    appBar: AppBar(
-                      iconTheme: const IconThemeData(color: colorBlue),
-                      elevation: 0,
-                      backgroundColor: Colors.transparent,
-                    ),
-                    body: AdsList(adsList: adsList))
+                appBar: AppBar(
+                  iconTheme: const IconThemeData(color: colorBlue),
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                ),
+                body: AdsList(adsList: adsList))
                 : const LoadingPage();
           } else {
             return const LoadingPage();
@@ -74,14 +54,22 @@ class AdsList extends StatefulWidget {
 
 class _AdsListState extends State<AdsList> {
   bool isGrid = isGridSaved;
-
+  List<AdModel?>? adsList = [];
   _storeisGrid(isGrid) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isGrid', isGrid);
   }
 
   @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+      adsList = await AdsDatabaseServices().AdsDataList;
+    setState(() {
+    });
+  }
+  @override
   Widget build(BuildContext context) {
+        print(adsList);
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics()),
@@ -97,9 +85,9 @@ class _AdsListState extends State<AdsList> {
                 icon: isGrid
                     ? const Icon(Icons.grid_view_sharp)
                     : const Icon(
-                        Icons.view_list,
-                        size: 28,
-                      ),
+                  Icons.view_list,
+                  size: 28,
+                ),
                 onPressed: () {
                   setState(() {
                     isGrid = !isGrid;
@@ -110,13 +98,14 @@ class _AdsListState extends State<AdsList> {
               ),
             ), // Icon(Icons.add),
           ),
+          //  LookForScreen(),
           isGrid
               ? AdsByGrid(
-                  adsList: widget.adsList,
-                )
+            adsList: widget.adsList,
+          )
               : AdsByList(
-                  adsList: widget.adsList,
-                ),
+            adsList: widget.adsList,
+          ),
           const SizedBox(height: 50,)
         ],
       ),

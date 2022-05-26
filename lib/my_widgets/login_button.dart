@@ -32,7 +32,7 @@ class LoginButton extends StatelessWidget {
       onPrimary: labelColor,
       primary: color,
       minimumSize: Size(width, height), //Size(88, 36)
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
@@ -40,9 +40,11 @@ class LoginButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: ElevatedButton(
-          style: raisedButtonStyle,
+        style: raisedButtonStyle,
           onPressed: onPressed,
-          child: Text(label,style: labelStyle,),
+          child: Container(
+              margin: EdgeInsets.only(top: 7),
+              child: Text(label,style: labelStyle,)),
         ),
     )
     ;

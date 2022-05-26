@@ -1,9 +1,13 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:coastv1/data_layer/models/user_data.dart';
 import 'package:coastv1/providers/authentication_services.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
@@ -22,7 +26,7 @@ class UserDatabaseServices with ChangeNotifier {
   /// ### userData Section ###
 
   // Add userData to 'userData' collection on FireStore
-  Future addUserDate(String? uid, String? email, String? password, String? name,
+  Future addUserData(String? uid, String? email, String? password, String? name,
       String? mob, String? description, DateTime? signUPDate) async {
     try {
       await userData_collection.doc(uid).set({
@@ -47,7 +51,7 @@ class UserDatabaseServices with ChangeNotifier {
   }
 
   // Update userData in 'userData' collection on FireStore
-  Future updateUserDate(
+  Future updateUserData(
       {String? uid,
       String? email,
       String? password,
@@ -90,6 +94,29 @@ class UserDatabaseServices with ChangeNotifier {
     }
     print('# deleted to FireStore Successfully ');
   }
+
+  // upload single image to firebase Storage
+  Future<String> uploadImage({required File image, required String cloud_path,required String file_name}) async {
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child(cloud_path)
+        .child(file_name);
+    await ref.putFile(image);
+    return await ref.getDownloadURL();
+  }
+
+
+  Future pickImage({required ImageSource source}) async {
+    try {
+      final pickedImage =
+      await ImagePicker().pickImage(source: source,imageQuality: 50 );
+      if (pickedImage == null) return;
+      return File(pickedImage.path);
+    } catch (e) {
+      print('#514 Fail to pick image ');
+    }
+  }
+
 
   /// Getting Data Functions
 
@@ -163,8 +190,8 @@ class UserDatabaseServices with ChangeNotifier {
         mob: snapshot.get('mob') ?? '-',
         description: snapshot['description'] ?? '-',
         profileImage: snapshot['profileImage'] ?? '-',
-        signUPDate: snapshot['signUPDate'].toDate() ?? DateTime.now(),
-        favoriteAds: snapshot['favoriteAds'].toDate() ?? [],
+        signUPDate: snapshot['signUPDate'] ?? DateTime.now(),
+        favoriteAds:List<String>.from( snapshot['favoriteAds']).toList() ,
         //title: snapshot['title'] ,
         //title: snapshot.get('title') ,
         //title: snapshot.get(FieldPath(['title'])) ,

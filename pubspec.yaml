@@ -32,6 +32,7 @@ dependencies:
 
   # REST:
   dio: ^4.0.0
+  cached_network_image: ^3.2.1
 
   #database:
   shared_preferences: ^2.0.8
@@ -50,13 +51,15 @@ dependencies:
 
   # ui
   cupertino_icons: ^1.0.2
-  flutter_native_splash: ^1.2.3
+  flutter_native_splash: ^2.2.1
   flutter_overboard: ^3.0.0
   sk_onboarding_screen: ^1.0.1
   page_transition: ^2.0.4
   auto_size_text: ^2.1.0
   flutter_spinkit: ^5.1.0
   getwidget: ^2.0.5
+  photo_view: ^0.13.0
+  google_fonts: ^3.0.1
 
 
   #for rolling switch
@@ -70,6 +73,8 @@ dependencies:
   flutter_phone_direct_caller: ^2.1.1
   uuid: ^3.0.6
   image_picker: ^0.8.5+3
+  url_launcher: ^6.1.2
+
 
 
 dev_dependencies:

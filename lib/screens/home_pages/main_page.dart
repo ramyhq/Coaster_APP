@@ -1,50 +1,72 @@
 
-
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coastv1/consts/colors.dart';
-import 'package:coastv1/data_layer/database_services/user_database_services.dart';
-import 'package:coastv1/data_layer/models/ad_model.dart';
 import 'package:coastv1/data_layer/models/user_data.dart';
 import 'package:coastv1/my_widgets/botton_navigation_bar.dart';
-import 'package:coastv1/providers/authentication_services.dart';
-import 'package:coastv1/screens/auth/login_screen.dart';
+import 'package:coastv1/my_widgets/loading_widget.dart';
+import 'package:coastv1/my_widgets/showAlerts.dart';
 import 'package:coastv1/screens/home_drawer/home_drawer.dart';
+import 'package:coastv1/screens/home_drawer/settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:get/get.dart';
 import '../../consts/text_const.dart';
-import '../../main.dart';
-import '../auth/start_screen.dart';
-import 'look_for_screen.dart';
+
 
 class MainPage extends StatelessWidget {
   static const String id = 'MainPage';
-
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({Key? key,}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final ourUserState = Provider.of<User?>(context); // for only user Login Status
     final userDataFromDB = Provider.of<UserData?>(context); // stream of profile user data from DB
-    //final adsDataFromDB = Provider.of<AdModel?>(context); // stream of ads data from DB
+    final user = FirebaseAuth.instance.currentUser;
+
     print('MainPage build is called');
+      print('from user data 3 :${userDataFromDB}');
     if(userDataFromDB != null ){
-      print('from user data :${userDataFromDB.email}');
-      //print('the uid dddddddddddddz ${adsDataFromDB}');
     }else{
     }
-    return SafeArea(
+    return Consumer<User?>(
+  builder: (context, userDataFromDBHere, child) {
+    return userDataFromDBHere == null ?  LoadingPage() :  SafeArea(
       child: Scaffold(
         drawer: HomeDrawer(),
         appBar: AppBar(
-          title: ourUserState == null ? const Text('Hey there :)'): Text('Hi ${ourUserState.photoURL}',style: kHiThere,),
           backgroundColor: colorBlue,
+          actions: [
+            Container(
+               margin: const EdgeInsets.only(right: 16,top: 5,left: 16),
+              child: CircleAvatar(
+                radius: 17,
+                backgroundColor: Colors.white,
+                child: GestureDetector(
+                  child: CircleAvatar(
+                    radius: 16,
+                    backgroundColor: colorBlue,
+                    backgroundImage: CachedNetworkImageProvider(userDataFromDB == null ? defaultProfileImage :  userDataFromDB.profileImage.toString()),
+                  ),
+                  onTap: (){
+                    if(ourUserState!.isAnonymous){
+                      showLoginAlertDialog(context: context, function: () {
+                      });
+                      return;
+                    }
+                    Navigator.push(
+                        context,PageRouteBuilder(
+                        pageBuilder:(context, animation1, animation2)=> SettingView()));
+
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
         body: MyPagesWithBottomNavigationBar(),
       ),
     );
+  },
+);
   }
 }
 

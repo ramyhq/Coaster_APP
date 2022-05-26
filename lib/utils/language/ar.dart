@@ -29,4 +29,86 @@ const Map<String, String> ar = {
 
   // Main Screen
   'Logout' : 'تسجيل خروج',
+
+
+  // Setting   @SettingView
+
+  // 'Email' : 'الايميل', repeated
+  'Name' : 'الاسم',
+  // 'Password' : 'الباسورد', repeated
+  'Phone' : 'الهاتف',
+  'About' : 'من انا؟',
+  'Joined Date' : 'تاريخ التسجيل',
+  'edit' : 'تعديل',
+
+
+  // Drawer Items
+  'Settings' : 'الاعدادت',
+  'About App' : 'عن التطبيق',
+  'Coaster is the easiest solution to search for real estate in the coastal cities easily... Find your vacation, your apartment, or even a commercial store' : 'كوستر اسهل حل للبحث عن عقارات في مدن الساحل بسهوله... اعثر علي اجازتك او شقتك او حتي محل تجاري',
+
+'Terms' : 'سياسات الاستاخدام',
+
+  // showLoginAlertDialog
+   'you need to login to use this page' : 'تحتاج لتسجيل الدخول',
+   'Cancel' : 'الغاء',
+   'Choose Image' : 'اختر صوره',
+   'Camera' : 'الكاميرا',
+   'Gallery' : 'المعرض',
+   'Enter a title' : 'ادخل العنوان',
+
+  // New Ad @AddAdScreen
+   'Title' : 'العنوان',
+   // 'description' : 'الوصف', repeated
+   'Wrong Number' : 'رقك خاطيء',
+   'Mobile' : 'الهاتف',
+   'Enter Price' : 'ادحل السعر',
+   'Price' : 'السعر',
+   'What is the area of the place?' : 'ما هي مساحة المكان؟',
+   'Area of the place' : 'مساحة المكان',
+   'Enter address' : 'ادخل العنوان',
+   'Address' : 'العنوان',
+   'Location' : 'المدينة',
+   'Rent or Sell' : 'ايجار ام للبيع',
+   'rent' : 'ايجار',
+   'sell' : 'بيع',
+   'Apartment type' : 'نوع العقار',
+   'apartment' : '2222',
+   'villa' : 'فيلا',
+   'land' : 'ارض',
+   'chalet' : 'شاليه',
+   'shop' : 'محل',
+   'Level' : 'الطابق',
+   'Rooms' : 'الغرف',
+    'Wcs' : 'الحمامات',
+   'Add Ad' : 'اضافة الاعلان',
+   'Select image' : 'اختر صوره',
+
+  // AdViewScreen
+   'delete' : 'حذف',
+   'Description' : 'الوصف',
+   'Details' : 'تفاصيل',
+   'Call' : 'اتصل',
+   'Type' : 'نوع الاعلان',
+   'Type of property' : 'نوع العقار',
+   'Area' : 'المساحه',
+
+  // All Ads Screen
+   'No Result match your search' : 'لا يوجد نتيجة',
+   'Search here...' : 'بحث',
+   'Find by Location' : 'ابحث في مكان',
+
+
+  // Find By Place
+
+   'Apartments' : 'شقق',
+   'Villa' : 'فيلا',
+   'Chalet' : 'شاليه',
+   'Shop' : 'محل',
+   'For Rent' : 'للايجار',
+   'For Sell' : 'للبيع',
+
+
+
+
 };

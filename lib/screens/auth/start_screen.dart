@@ -83,7 +83,7 @@ class StartScreen extends StatelessWidget {
                             textBaseline: TextBaseline.alphabetic,
                             children: [
                               Text(
-                                'Coast',
+                                'Coaster',
                                 style: kLoginScreenTitle,
                               ),
                               SizedBox(

@@ -2,15 +2,19 @@
 
 import 'package:coastv1/consts/colors.dart';
 import 'package:coastv1/data_layer/database_services/ads_db_services.dart';
-import 'package:coastv1/data_layer/database_services/user_database_services.dart';
 import 'package:coastv1/data_layer/models/ad_model.dart';
+import 'package:coastv1/main.dart';
 import 'package:coastv1/my_widgets/image_slider.dart';
 import 'package:coastv1/my_widgets/loading_widget.dart';
-import 'package:contactus/contactus.dart';
+import 'package:coastv1/my_widgets/my_grid.dart';
+import 'package:coastv1/providers/authentication_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:provider/provider.dart';
+import 'package:photo_view/photo_view.dart';
 
 class AdViewScreen extends StatelessWidget {
   final String? adID;
@@ -32,26 +36,23 @@ class AdViewScreen extends StatelessWidget {
   }
 }
 
-class AdViewScreenDetails extends StatelessWidget {
+class AdViewScreenDetails extends StatefulWidget {
+  @override
+  State<AdViewScreenDetails> createState() => _AdViewScreenDetailsState();
+}
+
+class _AdViewScreenDetailsState extends State<AdViewScreenDetails> {
   @override
   Widget build(BuildContext context) {
     var adsDataFromDB =
         Provider.of<AdModel?>(context); // stream of ads data from DB
+    final user = Provider.of<User>(context);
 
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: colorBlue),
         elevation: 0,
         backgroundColor: Colors.transparent,
-        actions: [
-          Transform.translate(
-            offset: Offset(0,0),
-            child: IconButton(
-              icon: Icon(Icons.more_vert),
-              onPressed: () {},
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: ListView(
@@ -59,24 +60,22 @@ class AdViewScreenDetails extends StatelessWidget {
               BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           children: [
             SimpleImageSlider(
-              images: [
-                'assets/images/ob0.png',
-                'assets/images/splachlogo.png',
-                'assets/images/ob0.png',
-                'assets/images/splachlogo.png',
-              ],
+              images: List<String>.from(adsDataFromDB!.imageSlider!.toList()),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Add Date : ${DateTime.now().toString().substring(0, 16)}',
-                    style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: colorBlue),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Date : ${DateTime.now().toString().substring(0, 16)}',
+                      style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: colorBlue),
+                    ),
                   ),
                   Divider(
                     endIndent: 20,
@@ -85,8 +84,47 @@ class AdViewScreenDetails extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
+                  !user.isAnonymous
+                      ? Transform.translate(
+                        offset: favoritLanguage == 'en' ?  Offset(16,-15) : Offset(-16,-15)  ,
+                        child: GFListTile(
+                    margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    padding: const EdgeInsets.all(0),
+                    icon: PopupMenuButton(
+                          onSelected: (value) {
+                            if (value == 1) {
+                              print(favoritLanguage);
+                            }
+                            if (value == 2) {
+                              showAlertDialog(
+                                  context: context,
+                                  function: () async {
+                                    try {
+                                      Navigator.of(context).pop();
+                                      await AdsDatabaseServices().deleteAdData(
+                                          adID: adsDataFromDB.adID);
+                                    } catch (e) {
+                                      print(
+                                          '#561 AdsDatabaseServices error : $e');
+                                    }
+                                  });
+                            }
+                          },
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              child: Text("edit".tr),
+                              value: 1,
+                            ),
+                            PopupMenuItem(
+                              child: Text("delete".tr),
+                              value: 2,
+                            )
+                          ]),
+                  ),
+                      )
+                      : Container(),
                   Text(
-                    adsDataFromDB!.title.toString(),
+                    adsDataFromDB.title.toString(),
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -96,7 +134,7 @@ class AdViewScreenDetails extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    'Description',
+                    'Description'.tr,
                     style: TextStyle(fontSize: 10, color: Colors.black54),
                   ),
                   SizedBox(
@@ -109,7 +147,7 @@ class AdViewScreenDetails extends StatelessWidget {
                     height: 40,
                   ),
                   Text(
-                    'Details',
+                    'Details'.tr,
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -131,7 +169,7 @@ class AdViewScreenDetails extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    'Address',
+                    'Address'.tr,
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -145,7 +183,7 @@ class AdViewScreenDetails extends StatelessWidget {
                     height: 20,
                   ),
                   Text(
-                    'Mobile',
+                    'Mobile'.tr,
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -160,7 +198,7 @@ class AdViewScreenDetails extends StatelessWidget {
                   ),
                   GFButton(
                     fullWidthButton: true,
-                    text: 'Call',
+                    text: 'Call'.tr,
                     color: colorBlue,
                     onPressed: () async {
                       FlutterPhoneDirectCaller.callNumber(
@@ -173,6 +211,7 @@ class AdViewScreenDetails extends StatelessWidget {
                 ],
               ),
             ),
+
           ],
         ),
       ),
@@ -191,11 +230,10 @@ class AdViewScreenDetails extends StatelessWidget {
     return Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('adType'),
-            SizedBox(
-              width: 120,
-            ),
+            Text('Type'.tr),
+
             Text(adType.toString()),
           ],
         ),
@@ -204,11 +242,9 @@ class AdViewScreenDetails extends StatelessWidget {
           indent: 20,
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('apartmentType'),
-            SizedBox(
-              width: 60,
-            ),
+            Text('Type of property'.tr),
             Text(apartmentType.toString()),
           ],
         ),
@@ -217,12 +253,10 @@ class AdViewScreenDetails extends StatelessWidget {
           indent: 20,
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('price'),
-            SizedBox(
-              width: 145,
-            ),
-            Text(price.toString()),
+            Text('Price'.tr),
+            Text(price.toString(),textAlign: TextAlign.center,),
           ],
         ),
         Divider(
@@ -230,11 +264,10 @@ class AdViewScreenDetails extends StatelessWidget {
           indent: 20,
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('area'),
-            SizedBox(
-              width: 150,
-            ),
+            Text('Area'.tr),
+
             Text(area.toString()),
           ],
         ),
@@ -243,11 +276,10 @@ class AdViewScreenDetails extends StatelessWidget {
           indent: 20,
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('level'),
-            SizedBox(
-              width: 150,
-            ),
+            Text('Level'.tr),
+
             Text(level.toString()),
           ],
         ),
@@ -256,11 +288,9 @@ class AdViewScreenDetails extends StatelessWidget {
           indent: 20,
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('rooms'),
-            SizedBox(
-              width: 136,
-            ),
+            Text('Rooms'.tr),
             Text(rooms.toString()),
           ],
         ),
@@ -269,11 +299,9 @@ class AdViewScreenDetails extends StatelessWidget {
           indent: 20,
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('wcs'),
-            SizedBox(
-              width: 155,
-            ),
+            Text('Wcs'.tr),
             Text(wcs.toString()),
           ],
         ),

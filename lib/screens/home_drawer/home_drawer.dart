@@ -1,16 +1,22 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coastv1/consts/colors.dart';
+import 'package:coastv1/data_layer/database_services/user_database_services.dart';
 import 'package:coastv1/data_layer/models/user_data.dart';
+import 'package:coastv1/my_widgets/showAlerts.dart';
 import 'package:coastv1/providers/authentication_services.dart';
-import 'package:coastv1/screens/home_drawer/profile.dart';
 import 'package:coastv1/screens/home_drawer/settings.dart';
 import 'package:coastv1/screens/home_drawer/tems_privacy.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../main.dart';
 import '../auth/start_screen.dart';
@@ -22,6 +28,11 @@ class HomeDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loginProvider = Provider.of<AuthServices>(context);
+    final user = FirebaseAuth.instance.currentUser;
+    final Uri _url = Uri.parse('https://sites.google.com/view/coastv1/home');
+    void _launchUrl() async {
+      if (!await launchUrl(_url)) throw 'Could not launch $_url';
+    }
 
     return SafeArea(
       right: false,
@@ -31,7 +42,8 @@ class HomeDrawer extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 100,
-              backgroundImage: AssetImage('assets/images/profile0.png'),
+              backgroundColor: colorBlue,
+              backgroundImage: CachedNetworkImageProvider(user == null ? defaultProfileImage : user.photoURL.toString() != 'null' ? user.photoURL.toString() :defaultProfileImage ),
             ),
             SizedBox(
               height: 80,
@@ -48,49 +60,45 @@ class HomeDrawer extends StatelessWidget {
                   //mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     DrawerItem(
-                        text: 'Profile',
+                        text: 'Settings'.tr,
+                        onTap: () {
+                          if(user!.isAnonymous){
+                            showLoginAlertDialog(context: context, function: () {
+                            });
+                            return;
+                          }
+                          Navigator.push(
+                              context,PageRouteBuilder(
+                              pageBuilder:(context, animation1, animation2)=> SettingView()));
+
+
+                        }),
+
+                    DrawerItem(
+                        text: 'About App'.tr,
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Profile()));
-                        }),
-                    // DrawerItem(
-                    //     text: 'Setting',
-                    //     onTap: () {
-                    //       Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (context) => Setting()));
-                    //     }),
-                    DrawerItem(
-                        text: 'About App',
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AboutApp()));
+                              context,PageRouteBuilder(
+                              pageBuilder:(context, animation1, animation2)=>  AboutApp()));
                         }),
                     DrawerItem(
-                        text: 'Terms',
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Terms()));
-                        }),
+                        text: 'Terms'.tr,
+                        onTap: _launchUrl
+                    ),
                     DrawerItem(
-                      text: 'Log out',
+                      text: 'Logout'.tr,
                       onTap: () async {
+                        Navigator.pushReplacement(
+                            context,PageRouteBuilder(
+                            pageBuilder:(context, animation1, animation2)=> StartScreen()));
+
                         await loginProvider.logout();
                         SharedPreferences prefs = await SharedPreferences.getInstance();
                         await prefs.setString('userUid', '_');
                         print('logout succ and UID is reset :${prefs.getString('userUid')}');
                         userUid = '';
                         print('logout succ and UID var is  :$userUid');
-                          Navigator.pushReplacement(
-                              context,
-                              PageTransition(
-                                  type: PageTransitionType.fade,
-                                  child: StartScreen()));
+
 
                       },
                     ),
@@ -123,10 +131,14 @@ class DrawerItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(22),
       ),
       child: ListTile(
-        title: Text(
-          text,
-          style: TextStyle(color: Colors.white),
-          textAlign: TextAlign.center,
+        contentPadding: EdgeInsets.only(top: 0),
+        title: Container(
+          margin: EdgeInsets.only(top: 5),
+          child: Text(
+            text,
+            style: TextStyle(color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
         ),
         onTap: onTap,
       ),

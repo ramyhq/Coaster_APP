@@ -7,9 +7,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthServices with ChangeNotifier {
   bool _isLoading = false;
+  bool? isGuest ;
   String? _errorMessage;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   User? ourUser;
+  String defaultProfileImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsuKHtQ3e0QWhO0esSv8cafAxx9iYVpRsP8g&usqp=CAU';
   DateTime currentTime = DateTime.now();
 
   //AuthServices({this.ourUser});
@@ -36,14 +38,21 @@ class AuthServices with ChangeNotifier {
       setIsLoading(false);
       //create empty doc for the Guest with his unique uid (for later)
       await UserDatabaseServices(uid: ourUser!.uid).updateGuestDate(ourUser!.uid);
+      isGuest = true;
+      print('2qqq$isGuest');
+
       return _ourUserDataFromFirebaseUser(ourUser);
     } on SocketException {
       setIsLoading(false);
       setMessage('No internet');
+      print('OHH!! No internet');
     } on FirebaseAuthException catch (e) {
       setIsLoading(false);
-      setMessage(e.message);
+      setMessage('OHH!! ${e.message}');
+      print('OHH!! ${e.message}');
     }
+    notifyListeners();
+
   }
 
   // register
@@ -58,12 +67,16 @@ class AuthServices with ChangeNotifier {
     setIsLoading(true);
     try {
       UserCredential authResult = await _firebaseAuth
-          .createUserWithEmailAndPassword(email: email, password: password);
+          .createUserWithEmailAndPassword(email: email, password: password,);
       ourUser = authResult.user;
       setIsLoading(false);
       //create new doc for the user with his unique uid
       await UserDatabaseServices(uid: ourUser!.uid)
-          .addUserDate(ourUser!.uid,email,password,name,mob,description,currentTime);
+          .addUserData(ourUser!.uid,email,password,name,mob,description,currentTime);
+      notifyListeners();
+      await ourUser!.updatePhotoURL(defaultProfileImage);
+      await ourUser!.updateDisplayName(name);
+      isGuest = false;
       return ourUser;
     } on SocketException {
       setIsLoading(false);
@@ -72,7 +85,6 @@ class AuthServices with ChangeNotifier {
       setIsLoading(false);
       setMessage(e.message);
     }
-    notifyListeners();
   }
 
   // login
@@ -83,6 +95,7 @@ class AuthServices with ChangeNotifier {
           .signInWithEmailAndPassword(email: email, password: password);
       ourUser = authResult.user;
       setIsLoading(false);
+      isGuest = false;
       return ourUser;
     } on SocketException {
       setIsLoading(false);
@@ -104,10 +117,24 @@ class AuthServices with ChangeNotifier {
     return user != null ? UserData(uid: user.uid) : null;
   }
 
+  Future<String> changePassword({required String newPassword,User? user}) async {
+    try {
+      print('#5565 $user');
+     await user!.updatePassword(newPassword);
+    } on FirebaseAuthException catch (e) {
+      setMessage(e.message);
+      return e.message.toString();
+    }
+     print('#549 newPassword changed successfully');
+     return 'changed successfully';
+  }
+
 
   /// ### streams ####
 
   // stream of (our UserData status)
   Stream<User?> get ourUserStatusStream => _firebaseAuth.authStateChanges()
       .map((User? user) => user);
+
+
 }

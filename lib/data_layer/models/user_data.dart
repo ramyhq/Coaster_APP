@@ -31,8 +31,8 @@ class UserData {
     name = doc['name'];
     mob = doc['mob'];
     description = doc['description'];
-    description = doc['profileImage'];
+    profileImage = doc['profileImage'];
     signUPDate = doc['signUPDate'];
-    favoriteAds = doc['favoriteAds'];
+    favoriteAds =List<String>.from(doc['favoriteAds']).toList() ;
   }
 }

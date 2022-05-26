@@ -18,7 +18,7 @@ class AuthWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     print('AuthWrapper build is called');
     final ourUserState = Provider.of<User?>(context); // stream of (our UserData status) // for only user Login Status
-    if (ourUserState == null) {
+    if (ourUserState == null || ourUserState.isAnonymous) {
       print('if called in AuthWrapper');
       return StartScreen();
     } else {

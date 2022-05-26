@@ -52,6 +52,7 @@ class _SignUPScreenState extends State<SignUPScreen> {
     print("Shared pref called");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userUid', uid);
+    await prefs.setBool('isGrid', false);
     print('after succ login UID is :${prefs.getString('userUid')}');
   }
 
@@ -108,242 +109,234 @@ class _SignUPScreenState extends State<SignUPScreen> {
             ],
           ),
           body: Center(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Colors.white,
-              ),
-              width: MediaQuery.of(context).size.width / 1.15,
-              height: MediaQuery.of(context).size.height / 1.3,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Form(
-                  autovalidateMode: AutovalidateMode.always,
-                  key: _formKey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 50.0),
-                          child: Text(
-                            'Coast',
-                            style: kLoginScreenTitle,
-                          ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Form(
+                autovalidateMode: AutovalidateMode.always,
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 50.0),
+                        child: Text(
+                          'Coaster',
+                          style: kLoginScreenTitle,
                         ),
-                        // name
-                        MyTextField(
-                          controller: _nameController,
-                          validator: (val) {
-                            if (_letsValidat) {
-                              if (val!.isEmpty ) {
-                                return "enter your name".tr;
-                              } else {
-                                return null;
-                              }
+                      ),
+                      // name
+                      MyTextField(
+                        controller: _nameController,
+                        validator: (val) {
+                          if (_letsValidat) {
+                            if (val!.isEmpty ) {
+                              return "enter your name".tr;
+                            } else {
+                              return null;
                             }
-                          },
-                          hintText: "enter your name".tr,
-                          labelText: "name".tr,
-                          prefixIcon: Icon(Icons.mail),
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.done,
-                        ),
-                        // email
-                        MyTextField(
-                          controller: _emailController,
-                          validator: (val) {
-                            if (_letsValidat) {
-                              if (val!.isEmpty || !val.contains("@")) {
-                                return "enter a valid email".tr;
-                              } else {
-                                return null;
-                              }
+                          }
+                        },
+                        hintText: "enter your name".tr,
+                        labelText: "name".tr,
+                        prefixIcon: Icon(Icons.mail),
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.done,
+                      ),
+                      // email
+                      MyTextField(
+                        controller: _emailController,
+                        validator: (val) {
+                          if (_letsValidat) {
+                            if (val!.isEmpty || !val.contains("@")) {
+                              return "enter a valid email".tr;
+                            } else {
+                              return null;
                             }
-                          },
-                          hintText: "Enter Your Email".tr,
-                          labelText: "Email".tr,
-                          prefixIcon: Icon(Icons.mail),
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                        ),
-                        //Password
-                        MyTextField(
-                          controller: _passwordController,
-                          validator: (val) {
-                            if (_letsValidat) {
-                              if (val!.length < 6) {
-                                return 'Password too short'.tr;
-                              } else {
-                                return null;
-                              }
+                          }
+                        },
+                        hintText: "Enter Your Email".tr,
+                        labelText: "Email".tr,
+                        prefixIcon: Icon(Icons.mail),
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      //Password
+                      MyTextField(
+                        controller: _passwordController,
+                        validator: (val) {
+                          if (_letsValidat) {
+                            if (val!.length < 6) {
+                              return 'Password too short'.tr;
+                            } else {
+                              return null;
                             }
-                          },
-                          hintText: "Enter Your Password".tr,
-                          labelText: "Password".tr,
-                          prefixIcon: Icon(Icons.vpn_key),
-                          suffixIcon: IconButton(
-                              onPressed: () {
+                          }
+                        },
+                        hintText: "Enter Your Password".tr,
+                        labelText: "Password".tr,
+                        prefixIcon: Icon(Icons.vpn_key),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                            icon: _obscureText
+                                ? Icon(Icons.visibility)
+                                : Icon(Icons.visibility_off)),
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        obscureText: _obscureText,
+                      ),
+                      // confirm Password
+                      MyTextField(
+                        controller: _confirmPasswordController,
+                        validator: (val) {
+                          if (_letsValidat) {
+                            if (val != _passwordController.text) {
+                              return 'Password not match'.tr;
+                            } else {
+                              return null;
+                            }
+                          }
+                        },
+                        hintText: "confirm Your Password".tr,
+                        labelText: "Password".tr,
+                        prefixIcon: Icon(Icons.vpn_key),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                            icon: _obscureText
+                                ? Icon(Icons.visibility)
+                                : Icon(Icons.visibility_off)),
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        obscureText: _obscureText,
+                      ),
+                      //mob
+                      MyTextField(
+                        controller: _mobController,
+                        validator: (val) {
+                          if (_letsValidat) {
+                            if (val!.isEmpty || val.length < 11) {
+                              return "enter a your mobile".tr;
+                            } else {
+                              return null;
+                            }
+                          }
+                        },
+                        hintText: "enter your mobile".tr,
+                        labelText: "mobile".tr,
+                        prefixIcon: Icon(Icons.mail),
+                        keyboardType: TextInputType.phone,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      //description
+                      MyTextField(
+                        controller: _descriptionController,
+                        validator: (val) {
+                          if (_letsValidat) {
+                              return null;
+                          }
+                        },
+                        hintText: "description".tr,
+                        labelText: "description".tr,
+                        prefixIcon: Icon(Icons.mail),
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                      ),
+                      loginProvider.isLoading
+                          ? LoadingWidget()
+                          : LoginButton(
+                              width: 210,
+                              height: 60,
+                              labelStyle: kLoginLabelStyle,
+                              label: 'Sign up'.tr,
+                              onPressed: () async {
+                                FocusScope.of(context).unfocus(); // to unfocused Keyboard
                                 setState(() {
-                                  _obscureText = !_obscureText;
+                                  _letsValidat = true;
                                 });
-                              },
-                              icon: _obscureText
-                                  ? Icon(Icons.visibility)
-                                  : Icon(Icons.visibility_off)),
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          obscureText: _obscureText,
-                        ),
-                        // confirm Password
-                        MyTextField(
-                          controller: _confirmPasswordController,
-                          validator: (val) {
-                            if (_letsValidat) {
-                              if (val != _passwordController.text) {
-                                return 'Password not match'.tr;
-                              } else {
-                                return null;
-                              }
-                            }
-                          },
-                          hintText: "confirm Your Password".tr,
-                          labelText: "Password".tr,
-                          prefixIcon: Icon(Icons.vpn_key),
-                          suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _obscureText = !_obscureText;
-                                });
-                              },
-                              icon: _obscureText
-                                  ? Icon(Icons.visibility)
-                                  : Icon(Icons.visibility_off)),
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          obscureText: _obscureText,
-                        ),
-                        //mob
-                        MyTextField(
-                          controller: _mobController,
-                          validator: (val) {
-                            if (_letsValidat) {
-                              if (val!.isEmpty || val.length < 11) {
-                                return "enter a your mobile".tr;
-                              } else {
-                                return null;
-                              }
-                            }
-                          },
-                          hintText: "enter your mobile".tr,
-                          labelText: "mobile".tr,
-                          prefixIcon: Icon(Icons.mail),
-                          keyboardType: TextInputType.phone,
-                          textInputAction: TextInputAction.next,
-                        ),
-                        //description
-                        MyTextField(
-                          controller: _descriptionController,
-                          validator: (val) {
-                            if (_letsValidat) {
-                                return null;
-                            }
-                          },
-                          hintText: "description".tr,
-                          labelText: "description".tr,
-                          prefixIcon: Icon(Icons.mail),
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                        ),
-                        loginProvider.isLoading
-                            ? LoadingWidget()
-                            : LoginButton(
-                                width: 210,
-                                height: 60,
-                                labelStyle: kLoginLabelStyle,
-                                label: 'Sign up'.tr,
-                                onPressed: () async {
-                                  FocusScope.of(context).unfocus(); // to unfocused Keyboard
-                                  setState(() {
-                                    _letsValidat = true;
-                                  });
-                                  if (_formKey.currentState!.validate()) {
-                                    User? ourNewUser = await loginProvider.register(
-                                        _emailController.text.trim(),
-                                        _passwordController.text.trim(),
-                                        _nameController.text.trim(),
-                                        _mobController.text.trim(),
-                                        _descriptionController.text.trim(),
-                                  );
-                                    print('succ signup and use is ${ourNewUser!.email}');
-                                    _storeUserUid(ourNewUser.uid);
-                                    // if successfully Sign up
-                                    if(ourNewUser != null){
-                                      Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.fade, child: MainPage()));
-                                    }
+                                if (_formKey.currentState!.validate()) {
+                                  User? ourNewUser = await loginProvider.register(
+                                      _emailController.text.trim(),
+                                      _passwordController.text.trim(),
+                                      _nameController.text.trim(),
+                                      _mobController.text.trim(),
+                                      _descriptionController.text.trim(),
+                                );
+                                  print('succ signup and use is ${ourNewUser!.email}');
+                                  _storeUserUid(ourNewUser.uid);
+                                  // if successfully Sign up
+                                  if(ourNewUser != null){
+                                    Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.fade, child: MainPage()));
                                   }
+                                }
 
-                                },
-                              ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextButton(
+                              },
+                            ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            style: myButtonStyle,
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  PageTransition(
+                                      type: PageTransitionType.fade,
+                                      child: LoginScreen()));
+                            },
+                            child: Text(
+                              'Already have account ?'.tr,
+                              style: kForgetPasswordS,
+                            ),
+                          ),
+                          OutlinedButton(
                               style: myButtonStyle,
                               onPressed: () {
-                                Navigator.pushReplacement(
-                                    context,
-                                    PageTransition(
-                                        type: PageTransitionType.fade,
-                                        child: LoginScreen()));
+                                widget.toggleRegister();
+                                // Navigator.pushReplacement(
+                                //     context,
+                                //     PageTransition(
+                                //         type: PageTransitionType.fade,
+                                //         child: LoginScreen()));
                               },
-                              child: Text(
-                                'Already have account ?'.tr,
-                                style: kForgetPasswordS,
-                              ),
-                            ),
-                            OutlinedButton(
-                                style: myButtonStyle,
-                                onPressed: () {
-                                  widget.toggleRegister();
-                                  // Navigator.pushReplacement(
-                                  //     context,
-                                  //     PageTransition(
-                                  //         type: PageTransitionType.fade,
-                                  //         child: LoginScreen()));
-                                },
-                                child: Text('Login'.tr, style: kSignUpStyle)),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        if (loginProvider.errorMessage != null)
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 0,
-                            ),
-                            width: double.infinity,
-                            color: Colors.amber,
-                            child: ListTile(
-                              trailing: IconButton(
-                                icon: Icon(
-                                  Icons.close,
-                                  size: 20,
-                                ),
-                                onPressed: () {
-                                  loginProvider.setMessage(null);
-                                },
-                              ),
-                              title: Text(loginProvider.errorMessage!,
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                  ),),
-                            ),
+                              child: Text('Login'.tr, style: kSignUpStyle)),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      if (loginProvider.errorMessage != null)
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 0,
                           ),
-                      ],
-                    ),
+                          width: double.infinity,
+                          color: Colors.amber,
+                          child: ListTile(
+                            trailing: IconButton(
+                              icon: Icon(
+                                Icons.close,
+                                size: 20,
+                              ),
+                              onPressed: () {
+                                loginProvider.setMessage(null);
+                              },
+                            ),
+                            title: Text(loginProvider.errorMessage!,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                ),),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ),

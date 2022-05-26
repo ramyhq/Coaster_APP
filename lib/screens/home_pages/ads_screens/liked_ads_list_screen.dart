@@ -3,6 +3,7 @@ import 'package:coastv1/data_layer/database_services/ads_db_services.dart';
 import 'package:coastv1/data_layer/database_services/user_database_services.dart';
 import 'package:coastv1/data_layer/models/ad_model.dart';
 import 'package:coastv1/data_layer/models/user_data.dart';
+import 'package:coastv1/main.dart';
 import 'package:coastv1/my_widgets/loading_widget.dart';
 import 'package:coastv1/my_widgets/my_grid.dart';
 import 'package:coastv1/screens/home_drawer/home_drawer.dart';
@@ -10,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ad_view_screen.dart';
 import 'add_ad_screen.dart';
@@ -18,16 +20,7 @@ class LikedAdsScreen extends StatelessWidget {
   const LikedAdsScreen({Key? key,})
       : super(key: key);
 
-  // void _showSettings() {
-  //   showModalBottomSheet(
-  //       context: context,
-  //       builder: (context){
-  //         return Container(
-  //           padding: EdgeInsets.symmetric(vertical: 20,horizontal: 60),
-  //           child: SettingsPanal(),
-  //         );
-  //       });
-  // }
+
   @override
   Widget build(BuildContext context) {
     final ourUser = Provider.of<User>(context);
@@ -57,8 +50,11 @@ class AdsList extends StatefulWidget {
 }
 
 class _AdsListState extends State<AdsList> {
-  bool isGrid = true;
-
+  bool isGrid = isGridSaved;
+  _storeisGrid(isGrid) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isGrid', isGrid);
+  }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -82,6 +78,8 @@ class _AdsListState extends State<AdsList> {
                 onPressed: () {
                   setState(() {
                     isGrid = !isGrid;
+                    _storeisGrid(isGrid);
+                    isGridSaved =isGrid;
                   });
                 },
               ),
@@ -121,7 +119,7 @@ class AdsByList extends StatelessWidget {
           price: adsList[index]?.price,
           placeReview: adsList[index]?.placeReview,
           likedBy: adsList[index]?.likedBy,
-          //image: adsList[index]!.imageSlider![0],
+          image: adsList[index]!.imageSlider![0],
           onTab: () {
             // I userd PageRouteBuilder to disable transition animation
             Navigator.push(
@@ -150,7 +148,7 @@ class AdsByGrid extends StatelessWidget {
             location: adsList[index]?.location,
             price: adsList[index]?.price,
             likedBy: adsList[index]?.likedBy,
-            //image: adsList[index]!.imageSlider![0],
+            image: adsList[index]!.imageSlider![0],
             onTab: () {
               Navigator.push(
                   context,

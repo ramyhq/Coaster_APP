@@ -12,7 +12,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../models/ad_model.dart';
 
-class AdsDatabaseServices {
+class AdsDatabaseServices with ChangeNotifier{
   final String? uid; // we will pass uid with Constructor as we will use it much
   AdsDatabaseServices({this.uid});
 
@@ -185,12 +185,23 @@ class AdsDatabaseServices {
     }
   }
 
+
+  // get all Ads Filtered By (Search)
   // Get List of Ads in ads_collection / return List of AdModel
   Future<List<AdModel?>?> get AdsDataList => ads_collection.get().then((ad) {
         return _adModelListFromQuerySnapshot(ad);
       });
 
+
+  // get all Ads Filtered By (Search)
+  Future<List<AdModel?>?>  AdsDataListBySearchKey(String searchKey) => ads_collection.where('title',isEqualTo: searchKey)
+      .get().then((ad) {
+        return _adModelListFromQuerySnapshot(ad);
+      });
+
+
   // this is used to add user in LikedBy List in likedBy List in FireStore
+  // and more later
   Future updateToListInAds({
     required String ad_uid,
     required String List_field,
@@ -202,6 +213,7 @@ class AdsDatabaseServices {
   }
 
   // this is used to remove user from LikedBy List in likedBy List in FireStore
+  // and more later
   Future removeFromListInAds({
     required String ad_uid,
     required String List_field,
@@ -226,8 +238,19 @@ class AdsDatabaseServices {
         .map((snapshot) => _adModelFromDocumentSnapshot(snapshot));
   }
 
+  // this is for StreamProvider in AuthWrapper
   Stream<List<AdModel?>?>? adsListStream() {
     return ads_collection
+        .snapshots()
+        .map((snapshot) => _adModelListFromQuerySnapshot(snapshot));
+  }
+
+ // this is for StreamBuilder in AdsList filtered by plcase and ad type
+  Stream<List<AdModel?>?>? adsListStreamByPlace({String? adType,String? apartmentType,String? location}) {
+    return ads_collection
+        .where('adType',isEqualTo: adType)
+        .where('apartmentType',isEqualTo: apartmentType)
+        .where('location',isEqualTo: location)
         .snapshots()
         .map((snapshot) => _adModelListFromQuerySnapshot(snapshot));
   }
@@ -262,7 +285,11 @@ class AdsDatabaseServices {
         rooms: snapshot['rooms'] ?? 0.0,
         wcs: snapshot['wcs'] ?? 0.0,
         // Strings
-        imageSlider: snapshot.get('imageSlider') ?? [],
+        //imageSlider: snapshot.get('imageSlider') ?? [],
+        //imageSlider: List<String>.from(snapshot['imageSlider']).toList(),
+        imageSlider: snapshot['imageSlider'] != null
+          ? snapshot.get('imageSlider').isNotEmpty ? List<String>.from(snapshot['imageSlider']).toList(): ['https://rmc.co.ma/wp-content/themes/consultix/images/no-image-found-360x260.png']
+             : ['https://rmc.co.ma/wp-content/themes/consultix/images/no-image-found-360x260.png'],
         likedBy: List<String>.from(snapshot.get('likedBy')),
         title: snapshot['title'] ?? '-',
         description: snapshot['description'] ?? '-',
@@ -277,7 +304,7 @@ class AdsDatabaseServices {
         adDate: snapshot['adDate'].toDate(),
       );
     } catch (error) {
-      print(error.toString());
+      print('#547 ${error.toString()}');
       return null;
     }
   }
@@ -325,7 +352,7 @@ class AdsDatabaseServices {
   List<AdModel?>? _adModelListFromQuerySnapshot(QuerySnapshot snapshot) {
     try {
       return snapshot.docs.map((doc) {
-        print(doc.data());
+        //print(doc.data());
         return AdModel(
           //ints
           adNumber: doc.data().toString().contains('adNumber')
@@ -358,9 +385,10 @@ class AdsDatabaseServices {
           createdBy: doc.data().toString().contains('createdBy')
               ? doc.get('createdBy')
               : '', //String
-          imageSlider: doc.data().toString().contains('imageSlider')
-              ? doc.get('imageSlider')
-              : [], //String
+          imageSlider: doc.get('imageSlider') != null
+              ? doc.get('imageSlider').isNotEmpty ? List<String>.from(doc.get('imageSlider')).toList()
+              : ['https://rmc.co.ma/wp-content/themes/consultix/images/no-image-found-360x260.png']
+              : ['https://rmc.co.ma/wp-content/themes/consultix/images/no-image-found-360x260.png'], //String
           likedBy: doc.data().toString().contains('likedBy')
               ? List<String>.from(doc.get('likedBy'))
               : [], //String
@@ -400,7 +428,7 @@ class AdsDatabaseServices {
         );
       }).toList();
     } catch (error) {
-      print('***** ${error.toString()}');
+      print('#541 ${error.toString()}');
       return null;
     }
   }

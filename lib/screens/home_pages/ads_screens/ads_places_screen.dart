@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coastv1/consts/app_functions/places.dart';
 import 'package:coastv1/consts/colors.dart';
 import 'package:coastv1/data_layer/database_services/user_database_services.dart';
@@ -18,14 +19,14 @@ class AdsPlacesScreen extends StatelessWidget {
   String? location;
 
   
-  AdsPlacesScreen({Key? key,this.adType,this.apartmentType}) : super(key: key);
+  AdsPlacesScreen({Key? key,this.adType,this.apartmentType,this.location}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final userDataFromDB = Provider.of<UserData?>(context); // stream of profile user data from DB
-    print('ccccczz$userDataFromDB');
+print(adType);
+print(apartmentType);
+print(location);
     return SafeArea(
       child: Scaffold(
-        drawer: HomeDrawer(),
         appBar: AppBar(
           iconTheme: const IconThemeData(
               color: colorBlue
@@ -101,18 +102,18 @@ class PlacesGridCard extends StatelessWidget {
             height: _w / 2.5, //2.6
             decoration: BoxDecoration(
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(.05), blurRadius: 50),
+                BoxShadow(color: Colors.black.withOpacity(.20), blurRadius: 5),
               ],
-              color: Color(0xff5C71F3),
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(8),
+              color: Colors.transparent,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(10),
               ),
             ),
             alignment: Alignment.center,
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage(image ?? 'assets/images/ob2.png'),
+                    image: CachedNetworkImageProvider(image!),
                     fit: BoxFit.fill),
               ),
             ),
@@ -125,7 +126,7 @@ class PlacesGridCard extends StatelessWidget {
             height: _w / 7,
             decoration: BoxDecoration(
               color: Colors.lightBlue.withOpacity(0.20),
-              borderRadius: BorderRadius.vertical(
+              borderRadius: const BorderRadius.vertical(
                 bottom: Radius.circular(8),
               ),
             ),

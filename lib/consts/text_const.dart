@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'colors.dart';
 
 
-// Welcome to Coast Title
+// Welcome to Coaster Title
 TextStyle kLoginScreenTitle = const TextStyle(fontSize: 40,color: colorBlack ,fontWeight: FontWeight.w900);
 
 //Text Field
@@ -26,9 +27,24 @@ const TextStyle kSignUpStyle =  TextStyle(fontSize: 12,fontWeight: FontWeight.w9
 
 // AppBars
 // main_page AppBar Text Style
-const TextStyle kHiThere =  TextStyle(fontSize: 12,fontWeight: FontWeight.w900,color: colorBlack);
+const TextStyle kHiThere =  TextStyle(fontSize: 14,fontWeight: FontWeight.w900,color: Colors.white);
 
 
 // DialogAlert
 const TextStyle kDialogAlert =  TextStyle(fontSize: 20,fontWeight: FontWeight.w600,color: colorBlack);
 const TextStyle kDialogAlertElements =  TextStyle(fontSize: 19,fontWeight: FontWeight.w400,color: colorBlack);
+
+// UserSettings Screen - Settings
+
+// Name
+const TextStyle kProfileName =  TextStyle(fontSize: 19,fontWeight: FontWeight.w600,);
+const TextStyle kProfileEmail =  TextStyle(fontSize: 14,fontWeight: FontWeight.w400,);
+// About me
+const TextStyle kProfileAboutMe =  TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color:colorGrey );
+
+// bottomSheet labelText
+const TextStyle kBottomSheetLT =  TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: colorLightBlue);
+// Settings names
+const TextStyle kSettingsTilesNames =  TextStyle(fontSize: 16,fontWeight: FontWeight.w500,color: colorGrey);
+ Text kEditText = Text("edit".tr ,style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: colorGrey));
+
